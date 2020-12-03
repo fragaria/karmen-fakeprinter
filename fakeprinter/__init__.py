@@ -110,7 +110,14 @@ def job():
     next_day = (STARTED + timedelta(days=1)).replace(hour=11, minute=59)
     return jsonify(
         {
-            "job": {"file": {"display": STATE["job_name"]}},
+            "job": {
+                "estimatedPrintTime": None,
+                "filament": {
+                    "length": None,
+                    "volume": None
+                },
+                "file": {
+                    "display": STATE["job_name"], "name": STATE["job_name"]}},
             "progress": {
                 "completion": 66.666,
                 "printTimeLeft": abs((next_day - datetime.now()).seconds),
@@ -304,7 +311,19 @@ def printer():
     global STATE
     return jsonify(
         {
-            "state": {"text": STATE["job_state"]},
+            "state": {"text": STATE["job_state"],
+                      "flags": {
+                          "operational": True,
+                          "paused": False,
+                          "printing": False,
+                          "cancelling": False,
+                          "pausing": False,
+                          "sdReady": True,
+                          "error": False,
+                          "ready": True,
+                          "closedOrError": False
+                      }
+                      },
             "temperature": {
                 "bed": {
                     "actual": STATE["temperature_bed"],
